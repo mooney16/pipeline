@@ -100,8 +100,8 @@
     {
       "id": "deal_034",
       "company": "Mapana",
-      "founder": null,
-      "description": null,
+      "founder": "Stephan Thodesen",
+      "description": "AI-powered crop health sensing platform for real-time monitoring of plant fertilizer and mineral intake to optimize precision inputs.",
       "vertical": "Agtech",
       "cohort": null,
       "stage": "Pipeline",
@@ -109,7 +109,7 @@
       "notes_url": null,
       "brief_url": null,
       "created_at": "2025-01-01",
-      "updated_at": "2026-03-05"
+      "updated_at": "2026-03-06"
     },
     {
       "id": "deal_035",
@@ -156,8 +156,8 @@
     {
       "id": "deal_038",
       "company": "Soil Action",
-      "founder": null,
-      "description": null,
+      "founder": "Nate Storey",
+      "description": "Tractor-mounted near-infrared spectroscopy sensors with AI to deliver real-time soil chemistry analysis, replacing expensive lab tests.",
       "vertical": "RegenerativeAg",
       "cohort": null,
       "stage": "Pipeline",
@@ -165,7 +165,7 @@
       "notes_url": null,
       "brief_url": null,
       "created_at": "2025-01-01",
-      "updated_at": "2026-03-05"
+      "updated_at": "2026-03-06"
     },
     {
       "id": "deal_039",
@@ -380,8 +380,8 @@
     {
       "id": "deal_054",
       "company": "Hermes",
-      "founder": null,
-      "description": null,
+      "founder": "Connor Thorpe",
+      "description": "Flow Guiding Barrel device and gold particle reagents that dramatically improve gene gun efficiency for plant genome editing and transformation.",
       "vertical": "Agtech",
       "cohort": null,
       "stage": "Pipeline",
@@ -389,7 +389,7 @@
       "notes_url": null,
       "brief_url": null,
       "created_at": "2025-01-01",
-      "updated_at": "2026-03-05"
+      "updated_at": "2026-03-06"
     },
     {
       "id": "deal_055",
@@ -702,8 +702,8 @@
     {
       "id": "deal_077",
       "company": "Agtech Logic",
-      "founder": null,
-      "description": null,
+      "founder": "Tom Gauthier",
+      "description": "Precision spot-spraying platform using AI and chlorophyll fluorescence sensors to reduce pesticide use by up to 90% on row crops.",
       "vertical": "Agtech",
       "cohort": null,
       "stage": "Pipeline",
@@ -711,13 +711,13 @@
       "notes_url": null,
       "brief_url": null,
       "created_at": "2025-01-01",
-      "updated_at": "2026-03-05"
+      "updated_at": "2026-03-06"
     },
     {
       "id": "deal_078",
       "company": "L1A",
-      "founder": null,
-      "description": null,
+      "founder": "Michael Locatis",
+      "description": "AI-native managing general underwriter building precision agricultural risk scoring and specialty insurance products for climate-related crop risks.",
       "vertical": "Agtech",
       "cohort": null,
       "stage": "Pipeline",
@@ -725,7 +725,7 @@
       "notes_url": null,
       "brief_url": null,
       "created_at": "2025-01-01",
-      "updated_at": "2026-03-05"
+      "updated_at": "2026-03-06"
     },
     {
       "id": "deal_079",
@@ -940,8 +940,8 @@
     {
       "id": "deal_094",
       "company": "BindBridge",
-      "founder": null,
-      "description": null,
+      "founder": "George Crane",
+      "description": "AI-driven molecular glue discovery platform for next-generation crop protection targeting protein degradation in weeds and pests.",
       "vertical": "Agtech",
       "cohort": null,
       "stage": "Pipeline",
@@ -949,7 +949,7 @@
       "notes_url": null,
       "brief_url": null,
       "created_at": "2025-01-01",
-      "updated_at": "2026-03-05"
+      "updated_at": "2026-03-06"
     },
     {
       "id": "deal_095",
@@ -968,8 +968,8 @@
     {
       "id": "deal_096",
       "company": "Soilytics",
-      "founder": null,
-      "description": null,
+      "founder": "Penelope Nagel",
+      "description": "Hyperspectral infrared imaging platform for rapid, low-cost soil nutrient mapping to replace traditional wet chemistry soil testing.",
       "vertical": "RegenerativeAg",
       "cohort": null,
       "stage": "Pipeline",
@@ -977,13 +977,13 @@
       "notes_url": null,
       "brief_url": null,
       "created_at": "2025-01-01",
-      "updated_at": "2026-03-05"
+      "updated_at": "2026-03-06"
     },
     {
       "id": "deal_097",
       "company": "Global Neighbor",
-      "founder": null,
-      "description": null,
+      "founder": "Jon Jackson",
+      "description": "Directed energy weed control technology using light-based systems to sterilize weed seeds at harvest without herbicides.",
       "vertical": "Agtech",
       "cohort": null,
       "stage": "Pipeline",
@@ -991,7 +991,7 @@
       "notes_url": null,
       "brief_url": null,
       "created_at": "2025-01-01",
-      "updated_at": "2026-03-05"
+      "updated_at": "2026-03-06"
     },
     {
       "id": "deal_098",
@@ -1738,8 +1738,8 @@
     {
       "id": "deal_151",
       "company": "Forjazul",
-      "founder": null,
-      "description": null,
+      "founder": "Scott Fahrenkrug",
+      "description": "Genetic improvement platform for seaweed (Kappaphycus alvarezii) to produce ocean-farmed biostimulants and sustainable biomaterials.",
       "vertical": "Agtech",
       "cohort": null,
       "stage": "Pipeline",
@@ -1747,7 +1747,7 @@
       "notes_url": null,
       "brief_url": null,
       "created_at": "2025-01-01",
-      "updated_at": "2026-03-05"
+      "updated_at": "2026-03-06"
     },
     {
       "id": "deal_152",
