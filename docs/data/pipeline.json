@@ -267,7 +267,7 @@
     },
     {
       "id": "deal_046",
-      "company": "Vane",
+      "company": "VANE",
       "founder": "David Haworth",
       "description": "Agtech company focused on animal health monitoring solutions",
       "vertical": "Agtech",
@@ -407,7 +407,7 @@
     },
     {
       "id": "deal_056",
-      "company": "Brightwater",
+      "company": "Brightwater Tools",
       "founder": "Kim Nace",
       "description": "Converts human urine into a nutrient-rich agricultural fertilizer alternative to reduce synthetic fertilizer use",
       "vertical": "Agtech",
@@ -449,7 +449,7 @@
     },
     {
       "id": "deal_059",
-      "company": "Stockcropper",
+      "company": "Stock Cropper",
       "founder": "Zack Smith",
       "description": "Integrates row crops with multiple livestock species simultaneously in the field using a regenerative stock cropping system",
       "vertical": "Agtech",
@@ -463,7 +463,7 @@
     },
     {
       "id": "deal_060",
-      "company": "Livestock Doc",
+      "company": "LivestockDoc",
       "founder": null,
       "description": "Vet-guided livestock health platform providing clinical decision support and emergency care guidance for farmers",
       "vertical": "AnimalHealth",
@@ -561,7 +561,7 @@
     },
     {
       "id": "deal_067",
-      "company": "Upstream Bio",
+      "company": "Upstream Ag",
       "founder": null,
       "description": null,
       "vertical": "Agtech",
@@ -701,7 +701,7 @@
     },
     {
       "id": "deal_077",
-      "company": "Agtech Logic",
+      "company": "AgTechLogic",
       "founder": "Tom Gauthier",
       "description": "Precision spot-spraying platform using AI and chlorophyll fluorescence sensors to reduce pesticide use by up to 90% on row crops.",
       "vertical": "Agtech",
@@ -743,7 +743,7 @@
     },
     {
       "id": "deal_080",
-      "company": "Earnest Ag",
+      "company": "Earnest Agriculture",
       "founder": "Eddy Mejia",
       "description": "Microbial seed coatings using native prairie microbes to boost crop yields and reduce synthetic chemical use",
       "vertical": "Agtech",
@@ -869,7 +869,7 @@
     },
     {
       "id": "deal_089",
-      "company": "Rogue.ai",
+      "company": "Rogue Agriculture",
       "founder": null,
       "description": null,
       "vertical": "Agtech",
@@ -1345,7 +1345,7 @@
     },
     {
       "id": "deal_123",
-      "company": "Imio",
+      "company": "IMIO",
       "founder": "Charles Smith",
       "description": "Microbial Re-Gen product that converts crop residue into bioavailable nutrients to improve soil health and yields",
       "vertical": "Agtech",
@@ -1597,7 +1597,7 @@
     },
     {
       "id": "deal_141",
-      "company": "Bitcorn",
+      "company": "BitCorn",
       "founder": "Cael Sampson",
       "description": "Uses Bitcoin as financial infrastructure to help farmers self-custody savings and combat margin pressure in agriculture",
       "vertical": "Agtech",
@@ -1807,7 +1807,7 @@
     },
     {
       "id": "deal_010",
-      "company": "Quercus Bio",
+      "company": "Quercus Biosolutions",
       "founder": null,
       "description": "High speed protein-based herbicide discovery",
       "vertical": "PrecisionAg",
@@ -2003,7 +2003,7 @@
     },
     {
       "id": "deal_024",
-      "company": "Specvision",
+      "company": "SpecVision",
       "founder": null,
       "description": "Remote automated assessment for heavy ag machinery",
       "vertical": "Agtech",
@@ -2017,7 +2017,7 @@
     },
     {
       "id": "deal_025",
-      "company": "Continuum",
+      "company": "Continuum Ag",
       "founder": "Mitchell Hora",
       "description": "MRV software for tracking regenerative ag carbon impact",
       "vertical": "RegenerativeAg",
