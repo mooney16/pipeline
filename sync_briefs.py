@@ -18,9 +18,12 @@ def get_drive_briefs():
 
 def clean_name(s):
     if not s: return ""
+    # Remove common suffixes and brief labels
     s = s.replace('_Pre-Call_Brief.pdf', '').replace('.pdf', '')
     s = s.replace('_', ' ').replace('-', ' ').strip().lower()
-    s = re.sub(r' (inc|corp|llc|biosolutions|genetics|robotics|ag|bio|agtech)$', '', s)
+    # Handle specific common variations
+    s = s.replace(' biosolutions', ' bio').replace(' genetics', '').replace(' robotics', '').replace(' labs', '')
+    s = re.sub(r' (inc|corp|llc|ag|bio|agtech)$', '', s)
     return s.strip()
 
 def sync():
