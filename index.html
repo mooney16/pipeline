@@ -4,59 +4,28 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ASE Deal Flow</title>
-<script src="data.js"></script>
+<script src="p1.js"></script>
+<script src="p2.js"></script>
+<script src="p3.js"></script>
+<script src="p4.js"></script>
+<script src="p5.js"></script>
+<script src="p6.js"></script>
+<script>window.PIPELINE_DATA=(window.P1||[]).concat(window.P2||[],window.P3||[],window.P4||[],window.P5||[],window.P6||[]);</script>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
   :root {
-    --bg: #0f1117;
-    --surface: #1a1d27;
-    --surface2: #232638;
-    --border: #2d3148;
-    --text: #e2e8f0;
-    --muted: #8892a4;
-    --accent: #3b82f6;
-    --accent-hover: #2563eb;
-    --green: #10b981;
-    --amber: #f59e0b;
-    --cyan: #06b6d4;
-    --purple: #8b5cf6;
-    --emerald: #059669;
-    --pink: #ec4899;
-    --slate: #64748b;
-    --red: #ef4444;
-    --radius: 8px;
+    --bg: #0f1117; --surface: #1a1d27; --surface2: #232638; --border: #2d3148;
+    --text: #e2e8f0; --muted: #8892a4; --accent: #3b82f6; --accent-hover: #2563eb;
+    --green: #10b981; --slate: #64748b; --red: #ef4444; --radius: 8px;
   }
-
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    font-size: 13px;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .header {
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
-    padding: 12px 20px;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    flex-wrap: wrap;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-  }
+  body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 13px; min-height: 100vh; display: flex; flex-direction: column; }
+  .header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 12px 20px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; position: sticky; top: 0; z-index: 100; }
   .header h1 { font-size: 16px; font-weight: 700; color: var(--text); letter-spacing: -0.3px; white-space: nowrap; }
   .header-stats { display: flex; gap: 8px; flex-wrap: wrap; flex: 1; }
   .stat-chip { background: var(--surface2); border: 1px solid var(--border); border-radius: 20px; padding: 3px 10px; font-size: 12px; color: var(--muted); white-space: nowrap; }
   .stat-chip strong { color: var(--text); }
   .stat-chip.new strong { color: var(--green); }
   #stageSummary { display: flex; gap: 6px; flex-wrap: wrap; }
-
   .filters { background: var(--surface); border-bottom: 1px solid var(--border); padding: 8px 20px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
   .search-box { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius); padding: 5px 10px; color: var(--text); font-size: 12px; width: 220px; outline: none; }
   .search-box:focus { border-color: var(--accent); }
@@ -64,7 +33,6 @@
   .filter-btn:hover { border-color: var(--accent); color: var(--text); }
   .filter-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
   .filter-label { color: var(--muted); font-size: 12px; }
-
   .board-wrap { flex: 1; overflow-x: auto; padding: 16px 12px; }
   .board { display: flex; gap: 12px; min-width: max-content; align-items: flex-start; }
   .column { width: 220px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); display: flex; flex-direction: column; max-height: calc(100vh - 140px); }
@@ -75,7 +43,6 @@
   .column-cards { overflow-y: auto; padding: 8px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
   .column-cards.drag-over { background: rgba(59,130,246,0.08); }
   .empty-col { color: var(--muted); font-size: 11px; text-align: center; padding: 12px 0; }
-
   .card { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius); padding: 9px 10px; cursor: pointer; transition: border-color 0.15s, transform 0.1s; user-select: none; }
   .card:hover { border-color: var(--accent); transform: translateY(-1px); }
   .card.dragging { opacity: 0.5; }
@@ -85,18 +52,16 @@
   .card-meta { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
   .card-date { font-size: 10px; color: var(--slate); margin-left: auto; }
   .deck-icon { font-size: 13px; text-decoration: none; }
-
   .badge { display: inline-block; border-radius: 4px; padding: 1px 5px; font-size: 10px; font-weight: 600; letter-spacing: 0.2px; }
-  .badge-PrecisionAg    { background: #1e3a5f; color: #60a5fa; }
+  .badge-PrecisionAg { background: #1e3a5f; color: #60a5fa; }
   .badge-BiotechCropScience { background: #14532d; color: #4ade80; }
-  .badge-ClimateAg      { background: #422006; color: #fb923c; }
-  .badge-WaterTech      { background: #0c4a6e; color: #38bdf8; }
-  .badge-SupplyChain    { background: #3b0764; color: #c084fc; }
+  .badge-ClimateAg { background: #422006; color: #fb923c; }
+  .badge-WaterTech { background: #0c4a6e; color: #38bdf8; }
+  .badge-SupplyChain { background: #3b0764; color: #c084fc; }
   .badge-RegenerativeAg { background: #052e16; color: #34d399; }
-  .badge-AnimalHealth   { background: #4a1942; color: #f0abfc; }
-  .badge-AgTech         { background: #1e293b; color: #94a3b8; }
-  .badge-cohort         { background: #1c1f2e; color: var(--muted); border: 1px solid var(--border); }
-
+  .badge-AnimalHealth { background: #4a1942; color: #f0abfc; }
+  .badge-AgTech { background: #1e293b; color: #94a3b8; }
+  .badge-cohort { background: #1c1f2e; color: var(--muted); border: 1px solid var(--border); }
   .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 200; align-items: center; justify-content: center; }
   .overlay.active { display: flex; }
   .modal { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; width: 480px; max-width: 95vw; max-height: 88vh; overflow-y: auto; padding: 24px; }
@@ -123,7 +88,6 @@
   .log-list { list-style: none; display: flex; flex-direction: column; gap: 4px; }
   .log-list li { font-size: 11px; display: flex; gap: 8px; }
   .log-date { color: var(--muted); white-space: nowrap; }
-
   .add-modal { width: 420px; }
   .form-row { margin-bottom: 12px; }
   .form-row label { display: block; color: var(--muted); font-size: 11px; margin-bottom: 4px; }
@@ -139,7 +103,6 @@
 </style>
 </head>
 <body>
-
 <div class="header">
   <h1>ASE Deal Flow</h1>
   <div class="header-stats">
@@ -149,11 +112,10 @@
   </div>
   <button class="add-btn" onclick="openAddModal()">+ Add Deal</button>
 </div>
-
 <div class="filters">
   <span class="filter-label">Filter:</span>
   <input type="text" class="search-box" id="searchBox" placeholder="Search company, founder..." oninput="applyFilters()">
-  <button class="filter-btn" id="btnAll" onclick="setStageFilter('all')">All Stages</button>
+  <button class="filter-btn active" id="btnAll" onclick="setStageFilter('all')">All Stages</button>
   <button class="filter-btn" id="btnThisWeek" onclick="toggleWeekFilter()">This Week</button>
   <select class="search-box" id="verticalFilter" onchange="applyFilters()" style="width:140px">
     <option value="">All Verticals</option>
@@ -166,12 +128,10 @@
     <option value="RegenerativeAg">Regen Ag</option>
     <option value="AnimalHealth">Animal Health</option>
     <option value="AgTech">AgTech</option>
+    <option value="Agtech">AgTech</option>
   </select>
 </div>
-
-<div class="board-wrap">
-  <div class="board" id="board"></div>
-</div>
+<div class="board-wrap"><div class="board" id="board"></div></div>
 
 <div class="overlay" id="detailOverlay" onclick="closeDetailIfBg(event)">
   <div class="modal">
@@ -190,7 +150,7 @@
       <span class="detail-label" id="dm-raise-label">Raise</span><span class="detail-value" id="dm-raise"></span>
       <span class="detail-label" id="dm-links-label">Links</span><span class="detail-value" id="dm-links"></span>
     </div>
-    <div class="detail-section"><label>Description</label><div class="detail-value" id="dm-desc" style="color:var(--muted);font-size:12px;line-height:1.5"></div></div>
+    <div class="detail-section"><label>Description</label><div id="dm-desc" style="color:var(--muted);font-size:12px;line-height:1.5"></div></div>
     <div class="detail-section">
       <label>Notes</label>
       <textarea class="dm-textarea" id="dm-notes" placeholder="Add notes..."></textarea>
@@ -202,33 +162,24 @@
       <div class="save-row"><button class="btn-save" onclick="saveLastContact()">Save Contact</button><span class="save-indicator" id="si-contact">Saved</span></div>
     </div>
     <div class="detail-section" id="dm-log-section">
-      <label>Contact Log</label>
-      <ul class="log-list" id="dm-log"></ul>
+      <label>Contact Log</label><ul class="log-list" id="dm-log"></ul>
     </div>
   </div>
 </div>
 
 <div class="overlay" id="addOverlay" onclick="closeAddIfBg(event)">
   <div class="modal add-modal">
-    <div class="modal-header">
-      <div class="modal-title">Add Deal</div>
-      <button class="close-btn" onclick="closeAdd()">&#x2715;</button>
-    </div>
+    <div class="modal-header"><div class="modal-title">Add Deal</div><button class="close-btn" onclick="closeAdd()">&#x2715;</button></div>
     <div class="form-row"><label>Company Name *</label><input class="form-input" id="f-name" placeholder="Acme Ag"></div>
     <div class="form-row"><label>Founder Name</label><input class="form-input" id="f-founder"></div>
-    <div class="form-row"><label>Founder Email</label><input class="form-input" id="f-email" type="email"></div>
     <div class="form-row"><label>Description</label><input class="form-input" id="f-desc"></div>
     <div class="form-row"><label>Vertical</label>
       <select class="form-input" id="f-vertical">
         <option value="">Select vertical</option>
-        <option value="PrecisionAg">Precision Ag</option>
-        <option value="BiotechCropScience">Biotech/Crop Science</option>
-        <option value="ClimateAg">Climate Ag</option>
-        <option value="WaterTech">Water Tech</option>
-        <option value="SupplyChain">Supply Chain</option>
-        <option value="RegenerativeAg">Regenerative Ag</option>
-        <option value="AnimalHealth">Animal Health</option>
-        <option value="AgTech">AgTech</option>
+        <option value="PrecisionAg">Precision Ag</option><option value="BiotechCropScience">Biotech</option>
+        <option value="ClimateAg">Climate Ag</option><option value="WaterTech">Water Tech</option>
+        <option value="SupplyChain">Supply Chain</option><option value="RegenerativeAg">Regen Ag</option>
+        <option value="AnimalHealth">Animal Health</option><option value="Agtech">AgTech</option>
       </select>
     </div>
     <div class="form-row"><label>Stage</label>
@@ -241,7 +192,6 @@
     <div class="form-row"><label>Location</label><input class="form-input" id="f-location"></div>
     <div class="form-row"><label>Source</label><input class="form-input" id="f-source"></div>
     <div class="form-row"><label>Deck URL</label><input class="form-input" id="f-deck" type="url"></div>
-    <div class="form-row"><label>LinkedIn</label><input class="form-input" id="f-linkedin" type="url"></div>
     <div class="form-row"><label>Raise</label><input class="form-input" id="f-raise"></div>
     <div class="modal-footer">
       <button class="btn-cancel" onclick="closeAdd()">Cancel</button>
@@ -253,221 +203,168 @@
 <script>
 const EMBEDDED_DEALS = window.PIPELINE_DATA || [];
 const STAGES = ['Pipeline','Meeting','IC Review','Term Sheet','Portfolio','Passed','Later'];
-const STAGE_COLORS = {
-  'Pipeline':'#3b82f6','Meeting':'#8b5cf6','IC Review':'#f59e0b',
-  'Term Sheet':'#10b981','Later':'#06b6d4','Portfolio':'#059669','Passed':'#ef4444'
-};
+const STAGE_COLORS = {'Pipeline':'#3b82f6','Meeting':'#8b5cf6','IC Review':'#f59e0b','Term Sheet':'#10b981','Later':'#06b6d4','Portfolio':'#059669','Passed':'#ef4444'};
 
-let allDeals = [];
-let filteredDeals = [];
-let currentDeal = null;
-let currentIndex = null;
-let dragSrcStage = null;
-let dragSrcIndex = null;
-let stageFilter = 'all';
-let weekFilterOn = false;
+let allDeals=[], filteredDeals=[], currentDeal=null, currentIndex=null;
+let dragSrcStage=null, dragSrcIndex=null, stageFilter='all', weekFilterOn=false;
 
 function init() {
   allDeals = EMBEDDED_DEALS;
-  renderStats();
-  applyFilters();
+  renderStats(); applyFilters();
 }
 
 function renderStats() {
-  const stageSummary = document.getElementById('stageSummary');
-  stageSummary.innerHTML = STAGES.map(s => {
-    const c = allDeals.filter(d => d.stage === s).length;
-    if (!c) return '';
-    return `<div class="stat-chip"><strong style="color:${STAGE_COLORS[s]}">${c}</strong> ${s}</div>`;
+  document.getElementById('stageSummary').innerHTML = STAGES.map(s => {
+    const c = allDeals.filter(d=>d.stage===s).length;
+    return c ? `<div class="stat-chip"><strong style="color:${STAGE_COLORS[s]}">${c}</strong> ${s}</div>` : '';
   }).join('');
 }
 
 function setStageFilter(stage) {
-  stageFilter = stage;
-  document.getElementById('btnAll').classList.toggle('active', stage === 'all');
+  stageFilter=stage;
+  document.getElementById('btnAll').classList.toggle('active', stage==='all');
   applyFilters();
 }
 
 function toggleWeekFilter() {
-  weekFilterOn = !weekFilterOn;
+  weekFilterOn=!weekFilterOn;
   document.getElementById('btnThisWeek').classList.toggle('active', weekFilterOn);
   applyFilters();
 }
 
 function applyFilters() {
-  const q = document.getElementById('searchBox').value.trim().toLowerCase();
-  const vertical = document.getElementById('verticalFilter').value;
-  const now = new Date();
-  const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+  const q=document.getElementById('searchBox').value.trim().toLowerCase();
+  const vertical=document.getElementById('verticalFilter').value;
+  const weekAgo=new Date(Date.now()-7*24*60*60*1000);
 
   filteredDeals = allDeals.filter(d => {
-    if (stageFilter !== 'all' && d.stage !== stageFilter) return false;
+    if (stageFilter!=='all' && d.stage!==stageFilter) return false;
     if (weekFilterOn) {
       if (!d.date_added) return false;
-      const da = new Date(d.date_added + 'T00:00:00');
-      if (da < weekAgo) return false;
+      if (new Date(d.date_added+'T00:00:00') < weekAgo) return false;
     }
-    if (vertical && d.vertical !== vertical) return false;
+    if (vertical && d.vertical!==vertical) return false;
     if (q) {
-      const hay = [d.company_name, d.founder_name, d.description, d.location, d.source].join(' ').toLowerCase();
+      const hay=[d.company_name,d.founder_name,d.description,d.location,d.source].join(' ').toLowerCase();
       if (!hay.includes(q)) return false;
     }
     return true;
   });
-
-  renderBoard();
-  updateWeekCounter();
+  renderBoard(); updateWeekCounter();
 }
 
 function updateWeekCounter() {
-  const now = new Date();
-  const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-  const count = allDeals.filter(d => {
-    if (!d.date_added) return false;
-    return new Date(d.date_added + 'T00:00:00') >= weekAgo;
-  }).length;
-  document.getElementById('statNew').textContent = count;
-  document.getElementById('statTotal').textContent = filteredDeals.length;
+  const weekAgo=new Date(Date.now()-7*24*60*60*1000);
+  const count=allDeals.filter(d=>d.date_added && new Date(d.date_added+'T00:00:00')>=weekAgo).length;
+  document.getElementById('statNew').textContent=count;
+  document.getElementById('statTotal').textContent=filteredDeals.length;
 }
 
 function renderBoard() {
-  const board = document.getElementById('board');
-  board.innerHTML = '';
+  const board=document.getElementById('board'); board.innerHTML='';
   STAGES.forEach(stage => {
-    const deals = filteredDeals.filter(d => d.stage === stage);
-    const col = document.createElement('div');
-    col.className = 'column';
-    col.dataset.stage = stage;
-    const color = STAGE_COLORS[stage] || '#3b82f6';
-    col.innerHTML = `
-      <div class="column-header">
-        <div class="column-title"><span class="col-dot" style="background:${color}"></span>${stage}</div>
-        <span class="count-badge">${deals.length}</span>
-      </div>
-      <div class="column-cards" id="col-${slugify(stage)}"
-           ondragover="onDragOver(event)" ondragleave="onDragLeave(event)" ondrop="onDrop(event,'${stage}')">
-        ${deals.length === 0 ? '<div class="empty-col">No deals</div>' : deals.map(d => cardHTML(d)).join('')}
-      </div>`;
+    const deals=filteredDeals.filter(d=>d.stage===stage);
+    const col=document.createElement('div'); col.className='column'; col.dataset.stage=stage;
+    const color=STAGE_COLORS[stage]||'#3b82f6';
+    col.innerHTML=`<div class="column-header"><div class="column-title"><span class="col-dot" style="background:${color}"></span>${stage}</div><span class="count-badge">${deals.length}</span></div>
+    <div class="column-cards" id="col-${slugify(stage)}" ondragover="onDragOver(event)" ondragleave="onDragLeave(event)" ondrop="onDrop(event,'${stage}')">
+      ${deals.length===0?'<div class="empty-col">No deals</div>':deals.map(d=>cardHTML(d)).join('')}
+    </div>`;
     board.appendChild(col);
   });
-  document.querySelectorAll('.card').forEach(card => {
-    card.addEventListener('dragstart', onDragStart);
-    card.addEventListener('dragend', onDragEnd);
-  });
+  document.querySelectorAll('.card').forEach(c=>{c.addEventListener('dragstart',onDragStart);c.addEventListener('dragend',onDragEnd);});
 }
 
-function slugify(s) { return s.toLowerCase().replace(/\s+/g,'_'); }
+function slugify(s){return s.toLowerCase().replace(/\s+/g,'_');}
 
-function verticalBadgeClass(v) {
-  const map = {'PrecisionAg':'badge-PrecisionAg','Biotech/CropScience':'badge-BiotechCropScience','BiotechCropScience':'badge-BiotechCropScience','ClimateAg':'badge-ClimateAg','WaterTech':'badge-WaterTech','SupplyChain':'badge-SupplyChain','RegenerativeAg':'badge-RegenerativeAg','AnimalHealth':'badge-AnimalHealth','AgTech':'badge-AgTech'};
-  return map[v] || 'badge-AgTech';
+function vClass(v){
+  const m={'PrecisionAg':'badge-PrecisionAg','Biotech/CropScience':'badge-BiotechCropScience','BiotechCropScience':'badge-BiotechCropScience','ClimateAg':'badge-ClimateAg','WaterTech':'badge-WaterTech','SupplyChain':'badge-SupplyChain','RegenerativeAg':'badge-RegenerativeAg','AnimalHealth':'badge-AnimalHealth','AgTech':'badge-AgTech','Agtech':'badge-AgTech'};
+  return m[v]||'badge-AgTech';
 }
 
-function verticalLabel(v) {
-  const map = {'PrecisionAg':'Precision Ag','Biotech/CropScience':'Biotech','BiotechCropScience':'Biotech','ClimateAg':'Climate Ag','WaterTech':'Water Tech','SupplyChain':'Supply Chain','RegenerativeAg':'Regen Ag','AnimalHealth':'Animal Health','AgTech':'AgTech'};
-  return map[v] || (v || 'AgTech');
+function vLabel(v){
+  const m={'PrecisionAg':'Precision Ag','Biotech/CropScience':'Biotech','BiotechCropScience':'Biotech','ClimateAg':'Climate Ag','WaterTech':'Water Tech','SupplyChain':'Supply Chain','RegenerativeAg':'Regen Ag','AnimalHealth':'Animal Health','AgTech':'AgTech','Agtech':'AgTech'};
+  return m[v]||(v||'AgTech');
 }
 
-function cardHTML(deal) {
-  const idx = deal._index;
-  const deckIcon = deal.deck_url ? `<a class="deck-icon" href="${deal.deck_url}" target="_blank" title="View Deck" onclick="event.stopPropagation()">&#128196;</a>` : '';
-  const vertical = deal.vertical || '';
-  const cohortBadge = deal.cohort ? `<span class="badge badge-cohort">${deal.cohort}</span>` : '';
-  const dateStr = deal.date_added ? formatDate(deal.date_added) : '';
-  return `<div class="card" draggable="true" data-index="${idx}" data-stage="${deal.stage}" onclick="openDetail(${idx})">
-    <div class="card-name">${escHtml(deal.company_name || '')}</div>
-    ${deal.founder_name ? `<div class="card-founder">${escHtml(deal.founder_name)}</div>` : ''}
-    ${deal.description ? `<div class="card-desc">${escHtml(deal.description)}</div>` : ''}
+function cardHTML(d){
+  const deckIcon=d.deck_url?`<a class="deck-icon" href="${d.deck_url}" target="_blank" onclick="event.stopPropagation()">&#128196;</a>`:'';
+  const v=d.vertical||'';
+  return `<div class="card" draggable="true" data-index="${d._index}" data-stage="${d.stage}" onclick="openDetail(${d._index})">
+    <div class="card-name">${esc(d.company_name||'')}</div>
+    ${d.founder_name?`<div class="card-founder">${esc(d.founder_name)}</div>`:''}
+    ${d.description?`<div class="card-desc">${esc(d.description)}</div>`:''}
     <div class="card-meta">
-      ${vertical ? `<span class="badge ${verticalBadgeClass(vertical)}">${verticalLabel(vertical)}</span>` : ''}
-      ${cohortBadge}<span class="card-date">${dateStr}</span>${deckIcon}
+      ${v?`<span class="badge ${vClass(v)}">${vLabel(v)}</span>`:''}
+      ${d.cohort?`<span class="badge badge-cohort">${d.cohort}</span>`:''}
+      <span class="card-date">${d.date_added?fmtDate(d.date_added):''}</span>${deckIcon}
     </div></div>`;
 }
 
-function formatDate(s) {
-  if (!s) return '';
-  try { return new Date(s + 'T00:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'2-digit'}); } catch { return s; }
-}
+function fmtDate(s){try{return new Date(s+'T00:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'2-digit'});}catch{return s;}}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 
-function escHtml(s) {
-  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-
-function onDragStart(e) { const c=e.currentTarget; dragSrcIndex=parseInt(c.dataset.index); dragSrcStage=c.dataset.stage; c.classList.add('dragging'); e.dataTransfer.effectAllowed='move'; }
-function onDragEnd(e) { e.currentTarget.classList.remove('dragging'); }
-function onDragOver(e) { e.preventDefault(); e.currentTarget.classList.add('drag-over'); }
-function onDragLeave(e) { e.currentTarget.classList.remove('drag-over'); }
-function onDrop(e, targetStage) {
-  e.preventDefault(); e.currentTarget.classList.remove('drag-over');
-  if (dragSrcIndex===null||dragSrcStage===targetStage) return;
+function onDragStart(e){const c=e.currentTarget;dragSrcIndex=parseInt(c.dataset.index);dragSrcStage=c.dataset.stage;c.classList.add('dragging');e.dataTransfer.effectAllowed='move';}
+function onDragEnd(e){e.currentTarget.classList.remove('dragging');}
+function onDragOver(e){e.preventDefault();e.currentTarget.classList.add('drag-over');}
+function onDragLeave(e){e.currentTarget.classList.remove('drag-over');}
+function onDrop(e,targetStage){
+  e.preventDefault();e.currentTarget.classList.remove('drag-over');
+  if(dragSrcIndex===null||dragSrcStage===targetStage)return;
   const deal=allDeals.find(d=>d._index===dragSrcIndex);
-  if (deal) { deal.stage=targetStage; renderStats(); applyFilters(); }
-  dragSrcIndex=null; dragSrcStage=null;
+  if(deal){deal.stage=targetStage;renderStats();applyFilters();}
+  dragSrcIndex=null;dragSrcStage=null;
 }
 
-function findDealByIndex(idx) { return allDeals.find(d=>d._index===idx)||null; }
+function findDeal(idx){return allDeals.find(d=>d._index===idx)||null;}
 
-function openDetail(idx) {
-  const deal=findDealByIndex(idx); if (!deal) return;
-  currentDeal=deal; currentIndex=idx;
+function openDetail(idx){
+  const deal=findDeal(idx);if(!deal)return;
+  currentDeal=deal;currentIndex=idx;
   document.getElementById('dm-name').textContent=deal.company_name||'';
   document.getElementById('dm-founder').textContent=[deal.founder_name,deal.founder_email].filter(Boolean).join(' · ');
-  const stageSelect=document.getElementById('dm-stage');
-  stageSelect.innerHTML=STAGES.map(s=>`<option value="${s}" ${s===deal.stage?'selected':''}>${s}</option>`).join('');
-  document.getElementById('dm-vertical').textContent=verticalLabel(deal.vertical||'');
+  document.getElementById('dm-stage').innerHTML=STAGES.map(s=>`<option value="${s}" ${s===deal.stage?'selected':''}>${s}</option>`).join('');
+  document.getElementById('dm-vertical').textContent=vLabel(deal.vertical||'');
   document.getElementById('dm-location').textContent=deal.location||'—';
   document.getElementById('dm-cohort').textContent=deal.cohort||'—';
-  document.getElementById('dm-date').textContent=deal.date_added?formatDate(deal.date_added):'—';
+  document.getElementById('dm-date').textContent=deal.date_added?fmtDate(deal.date_added):'—';
   document.getElementById('dm-source').textContent=deal.source||'—';
   document.getElementById('dm-desc').textContent=deal.description||'—';
-  const raiseEl=document.getElementById('dm-raise'); const raiseLabel=document.getElementById('dm-raise-label');
-  if (deal.raise) { raiseEl.textContent=deal.raise; raiseEl.style.display=''; raiseLabel.style.display=''; }
-  else { raiseEl.style.display='none'; raiseLabel.style.display='none'; }
-  const linksEl=document.getElementById('dm-links'); const linksLabel=document.getElementById('dm-links-label');
+  const re=document.getElementById('dm-raise'),rl=document.getElementById('dm-raise-label');
+  if(deal.raise){re.textContent=deal.raise;re.style.display='';rl.style.display='';}else{re.style.display='none';rl.style.display='none';}
+  const le=document.getElementById('dm-links'),ll=document.getElementById('dm-links-label');
   const links=[];
-  if (deal.deck_url) links.push(`<a href="${deal.deck_url}" target="_blank">&#128196; View Deck</a>`);
-  if (deal.linkedin) links.push(`<a href="${deal.linkedin}" target="_blank">&#128101; LinkedIn</a>`);
-  if (links.length) { linksEl.innerHTML=links.join(' &nbsp;&#183;&nbsp; '); linksEl.style.display=''; linksLabel.style.display=''; }
-  else { linksEl.style.display='none'; linksLabel.style.display='none'; }
+  if(deal.deck_url)links.push(`<a href="${deal.deck_url}" target="_blank">&#128196; View Deck</a>`);
+  if(deal.linkedin)links.push(`<a href="${deal.linkedin}" target="_blank">&#128101; LinkedIn</a>`);
+  if(links.length){le.innerHTML=links.join(' &nbsp;&#183;&nbsp; ');le.style.display='';ll.style.display='';}else{le.style.display='none';ll.style.display='none';}
   document.getElementById('dm-notes').value=deal.notes||'';
   document.getElementById('dm-last-contact').value=deal.last_contact||'';
-  const log=deal.contact_log||[]; const logEl=document.getElementById('dm-log'); const logSection=document.getElementById('dm-log-section');
-  if (log.length) { logEl.innerHTML=log.map(e=>`<li><span class="log-date">${e.date||''}</span><span>${escHtml(e.note||'')}</span></li>`).join(''); logSection.style.display=''; }
-  else { logSection.style.display='none'; }
+  const log=deal.contact_log||[],logEl=document.getElementById('dm-log'),logSec=document.getElementById('dm-log-section');
+  if(log.length){logEl.innerHTML=log.map(e=>`<li><span class="log-date">${e.date||''}</span><span>${esc(e.note||'')}</span></li>`).join('');logSec.style.display='';}else{logSec.style.display='none';}
   document.getElementById('detailOverlay').classList.add('active');
 }
 
-function closeDetail() { document.getElementById('detailOverlay').classList.remove('active'); currentDeal=null; currentIndex=null; }
-function closeDetailIfBg(e) { if (e.target===document.getElementById('detailOverlay')) closeDetail(); }
-function onStageChange() {
-  if (currentIndex===null) return;
-  const deal=findDealByIndex(currentIndex);
-  if (deal) { deal.stage=document.getElementById('dm-stage').value; renderStats(); applyFilters(); }
-}
-function saveNotes() { if (currentIndex===null) return; const deal=findDealByIndex(currentIndex); if (deal) { deal.notes=document.getElementById('dm-notes').value; flashSaved('si-notes'); } }
-function saveLastContact() {
-  if (currentIndex===null) return; const deal=findDealByIndex(currentIndex);
-  if (deal) { const lc=document.getElementById('dm-last-contact').value; deal.last_contact=lc; if (lc) { deal.contact_log=deal.contact_log||[]; deal.contact_log.push({date:lc,note:'Contact recorded'}); } flashSaved('si-contact'); }
-}
-function flashSaved(id) { const el=document.getElementById(id); el.classList.add('show'); setTimeout(()=>el.classList.remove('show'),2000); }
+function closeDetail(){document.getElementById('detailOverlay').classList.remove('active');currentDeal=null;currentIndex=null;}
+function closeDetailIfBg(e){if(e.target===document.getElementById('detailOverlay'))closeDetail();}
+function onStageChange(){if(currentIndex===null)return;const d=findDeal(currentIndex);if(d){d.stage=document.getElementById('dm-stage').value;renderStats();applyFilters();}}
+function saveNotes(){if(currentIndex===null)return;const d=findDeal(currentIndex);if(d){d.notes=document.getElementById('dm-notes').value;flash('si-notes');}}
+function saveLastContact(){if(currentIndex===null)return;const d=findDeal(currentIndex);if(d){const lc=document.getElementById('dm-last-contact').value;d.last_contact=lc;if(lc){d.contact_log=d.contact_log||[];d.contact_log.push({date:lc,note:'Contact recorded'});}flash('si-contact');}}
+function flash(id){const el=document.getElementById(id);el.classList.add('show');setTimeout(()=>el.classList.remove('show'),2000);}
 
-function openAddModal() {
-  ['f-name','f-founder','f-email','f-desc','f-cohort','f-location','f-source','f-deck','f-linkedin','f-raise'].forEach(id=>document.getElementById(id).value='');
-  document.getElementById('f-stage').value='Pipeline'; document.getElementById('f-vertical').value='';
+function openAddModal(){
+  ['f-name','f-founder','f-desc','f-cohort','f-location','f-source','f-deck','f-raise'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('f-stage').value='Pipeline';document.getElementById('f-vertical').value='';
   document.getElementById('addOverlay').classList.add('active');
 }
-function closeAdd() { document.getElementById('addOverlay').classList.remove('active'); }
-function closeAddIfBg(e) { if (e.target===document.getElementById('addOverlay')) closeAdd(); }
-function submitAddDeal() {
-  const name=document.getElementById('f-name').value.trim(); if (!name) { alert('Company name is required.'); return; }
-  const deal={_index:allDeals.length,company_name:name,founder_name:document.getElementById('f-founder').value.trim()||null,founder_email:document.getElementById('f-email').value.trim()||null,description:document.getElementById('f-desc').value.trim()||null,vertical:document.getElementById('f-vertical').value||null,stage:document.getElementById('f-stage').value,cohort:document.getElementById('f-cohort').value.trim()||null,location:document.getElementById('f-location').value.trim()||null,source:document.getElementById('f-source').value.trim()||null,deck_url:document.getElementById('f-deck').value.trim()||null,linkedin:document.getElementById('f-linkedin').value.trim()||null,raise:document.getElementById('f-raise').value.trim()||null,date_added:new Date().toISOString().slice(0,10),notes:'',last_contact:'',contact_log:[]};
-  allDeals.push(deal); closeAdd(); renderStats(); applyFilters();
+function closeAdd(){document.getElementById('addOverlay').classList.remove('active');}
+function closeAddIfBg(e){if(e.target===document.getElementById('addOverlay'))closeAdd();}
+function submitAddDeal(){
+  const name=document.getElementById('f-name').value.trim();if(!name){alert('Company name is required.');return;}
+  const deal={_index:allDeals.length,company_name:name,founder_name:document.getElementById('f-founder').value.trim()||null,description:document.getElementById('f-desc').value.trim()||null,vertical:document.getElementById('f-vertical').value||null,stage:document.getElementById('f-stage').value,cohort:document.getElementById('f-cohort').value.trim()||null,location:document.getElementById('f-location').value.trim()||null,source:document.getElementById('f-source').value.trim()||null,deck_url:document.getElementById('f-deck').value.trim()||null,raise:document.getElementById('f-raise').value.trim()||null,date_added:new Date().toISOString().slice(0,10),notes:'',last_contact:'',contact_log:[]};
+  allDeals.push(deal);closeAdd();renderStats();applyFilters();
 }
 
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') { closeDetail(); closeAdd(); }
-});
-
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeDetail();closeAdd();}});
 init();
 </script>
 </body>
