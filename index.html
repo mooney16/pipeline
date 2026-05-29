@@ -105,6 +105,9 @@
   ::-webkit-scrollbar-track { background:var(--surface); }
   ::-webkit-scrollbar-thumb { background:var(--border); border-radius:3px; }
   ::-webkit-scrollbar-thumb:hover { background:var(--muted); }
+  .search-bar { background:var(--surface2); border:1px solid var(--border); border-radius:20px; padding:5px 12px; font-size:13px; color:var(--text); font-family:inherit; outline:none; width:180px; transition:all 0.15s; }
+  .search-bar:focus { border-color:var(--accent); width:220px; }
+  .search-bar::placeholder { color:var(--muted); }
 </style>
 </head>
 <body>
@@ -116,6 +119,7 @@
     <span class="filter-msg" id="filterMsg">Showing this week only <a onclick="toggleWeekFilter()">clear</a></span>
     <div id="stageSummary"></div>
   </div>
+  <input class="search-bar" id="searchBar" type="text" placeholder="Search company..." oninput="onSearch(event)" onkeydown="if(event.key==='Escape'){this.value='';onSearch(event)}">
   <div class="topbar-actions">
     <button class="btn btn-ghost" onclick="exportPipeline()">&#8595; Export JSON</button>
     <button class="btn btn-emerald" onclick="openAddModal()">+ Add Deal</button>
@@ -616,7 +620,13 @@ function toggleWeekFilter() {
   renderBoard();
 }
 
+function onSearch(e) {
+  searchQuery = e.target.value.toLowerCase().trim();
+  renderBoard();
+}
+
 let filterWeek = false;
+let searchQuery = '';
 
 function getWeekCutoff() {
   const now = new Date(); const day = now.getDay();
@@ -648,7 +658,7 @@ function renderStats() {
 function renderBoard() {
   renderStats();
   const cutoff = getWeekCutoff();
-  const displayDeals = filterWeek ? deals.filter(d => { try { return d.date_added && new Date(d.date_added+'T00:00:00') >= cutoff; } catch { return false; } }) : deals;
+  const displayDeals = (filterWeek ? deals.filter(d => { try { return d.date_added && new Date(d.date_added+'T00:00:00') >= cutoff; } catch { return false; } }) : deals).filter(d => !searchQuery || (d.company_name||'').toLowerCase().includes(searchQuery));
   const board = document.getElementById('board'); board.innerHTML='';
   STAGES.forEach(stage => {
     const sd = displayDeals.filter(d=>d.stage===stage);
