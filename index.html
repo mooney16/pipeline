@@ -3,388 +3,363 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ag Startup Engine &mdash; Deal Pipeline</title>
+<title>ASE Deal Flow</title>
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f0f0ec;color:#222;min-height:100vh;display:flex;flex-direction:column}
-
-/* ── HEADER ── */
-#header{background:#fff;border-bottom:2px solid #3d7a52;padding:0 20px;height:56px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:100;box-shadow:0 1px 4px rgba(0,0,0,.08)}
-#logo{display:flex;align-items:center;gap:10px;text-decoration:none}
-#logo svg{flex-shrink:0}
-#logo-text{font-size:15px;font-weight:700;color:#1a3a26;line-height:1.2;white-space:nowrap}
-#logo-text span{display:block;font-size:11px;font-weight:400;color:#3d7a52;letter-spacing:.04em}
-#deal-badge{background:#3d7a52;color:#fff;font-size:11px;font-weight:700;border-radius:20px;padding:2px 9px;margin-left:4px;white-space:nowrap}
-#header-spacer{flex:1}
-#search-wrap{position:relative;flex-shrink:0}
-#search{border:1.5px solid #d0d0cc;border-radius:20px;padding:6px 14px 6px 34px;font-size:13px;outline:none;width:220px;background:#f7f7f4;transition:border-color .15s}
-#search:focus{border-color:#3d7a52;background:#fff}
-#search-icon{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:#888;pointer-events:none}
-
-/* ── FILTER BAR ── */
-#filter-bar{background:#fff;border-bottom:1px solid #e0e0dc;padding:8px 20px;display:flex;gap:6px;align-items:center;flex-wrap:wrap;position:sticky;top:56px;z-index:99}
-#filter-bar label{font-size:11px;font-weight:600;color:#666;margin-right:4px;text-transform:uppercase;letter-spacing:.05em}
-.filter-btn{border:1.5px solid #d0d0cc;background:#fff;border-radius:20px;padding:4px 13px;font-size:12px;font-weight:500;cursor:pointer;transition:all .15s;color:#444;white-space:nowrap}
-.filter-btn:hover{border-color:#3d7a52;color:#3d7a52}
-.filter-btn.active{background:#3d7a52;border-color:#3d7a52;color:#fff}
-
-/* ── BOARD ── */
-#board-wrap{flex:1;overflow-x:auto;padding:16px 20px 32px;display:flex;gap:14px;min-height:0}
-.column{flex:0 0 260px;display:flex;flex-direction:column;background:#e4e4e0;border-radius:10px;overflow:hidden}
-.col-header{padding:10px 14px 8px;display:flex;align-items:center;gap:8px;background:#e4e4e0;position:sticky;top:0}
-.col-title{font-size:13px;font-weight:700;color:#333;text-transform:uppercase;letter-spacing:.04em}
-.col-count{background:#fff;border:1px solid #ccc;color:#555;font-size:11px;font-weight:700;border-radius:12px;padding:1px 7px;margin-left:auto}
-.col-cards{flex:1;overflow-y:auto;padding:0 8px 10px;display:flex;flex-direction:column;gap:8px;max-height:calc(100vh - 180px)}
-.col-cards::-webkit-scrollbar{width:4px}
-.col-cards::-webkit-scrollbar-thumb{background:#ccc;border-radius:4px}
-
-/* ── CARDS ── */
-.card{background:#fff;border-radius:8px;padding:11px 12px 10px;cursor:pointer;transition:box-shadow .15s,transform .1s;border:1px solid #e8e8e4;position:relative}
-.card:hover{box-shadow:0 3px 12px rgba(0,0,0,.12);transform:translateY(-1px)}
-.card-company{font-size:13px;font-weight:700;color:#111;line-height:1.3;margin-bottom:2px}
-.card-founder{font-size:11px;color:#888;margin-bottom:5px}
-.card-desc{font-size:11.5px;color:#555;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin-bottom:7px}
-.card-footer{display:flex;align-items:center;flex-wrap:wrap;gap:4px;margin-top:4px}
-.vtag{font-size:10px;font-weight:600;border-radius:10px;padding:2px 8px;border:1px solid transparent}
-.vtag-Agtech,.vtag-AgTech{background:#e8f0eb;color:#2d6040;border-color:#c0d8c8}
-.vtag-PrecisionAg{background:#e8eef8;color:#2c4e8a;border-color:#b8cce8}
-.vtag-AnimalHealth{background:#fdf0e0;color:#8a5a0a;border-color:#e8d0a0}
-.vtag-RegenerativeAg{background:#edf5e8;color:#3a6e22;border-color:#b8dca8}
-.vtag-LivestockAnimalHealth{background:#f8ece8;color:#8a3a1a;border-color:#e0c0b0}
-.vtag-Others,.vtag-null{background:#f0f0f0;color:#666;border-color:#d8d8d8}
-.cohort-tag{font-size:10px;color:#999;margin-left:auto;white-space:nowrap}
-.badge{font-size:10px;font-weight:600;border-radius:4px;padding:1px 6px;text-decoration:none}
-.badge-deck{background:#e8f0eb;color:#2d6040;border:1px solid #b0cdb8}
-.badge-brief{background:#e8eef8;color:#2c4e8a;border:1px solid #b0c4e0}
-.badge-notes{background:#fdf0e0;color:#8a5a0a;border:1px solid #e0c888}
-.no-results{padding:20px 14px;text-align:center;color:#aaa;font-size:12px}
-
-/* ── MODAL ── */
-#modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:200;align-items:center;justify-content:center}
-#modal-overlay.open{display:flex}
-#modal{background:#fff;border-radius:12px;width:480px;max-width:95vw;max-height:90vh;overflow-y:auto;box-shadow:0 8px 40px rgba(0,0,0,.22);display:flex;flex-direction:column}
-#modal-header{padding:18px 20px 12px;border-bottom:1px solid #eee;display:flex;align-items:flex-start;gap:10px}
-#modal-title{flex:1}
-#modal-company{font-size:17px;font-weight:800;color:#111;margin-bottom:3px}
-#modal-founder{font-size:12px;color:#888}
-#modal-close{background:none;border:none;font-size:20px;color:#aaa;cursor:pointer;padding:0 2px;line-height:1;flex-shrink:0;margin-top:1px}
-#modal-close:hover{color:#333}
-#modal-body{padding:16px 20px}
-.modal-row{margin-bottom:12px}
-.modal-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#aaa;margin-bottom:3px}
-.modal-value{font-size:13px;color:#333;line-height:1.5}
-.modal-badges{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
-.modal-badge{padding:3px 10px;border-radius:5px;font-size:11px;font-weight:600;text-decoration:none}
-#modal-stage-section{padding:14px 20px 18px;border-top:1px solid #eee}
-#modal-stage-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#aaa;margin-bottom:8px}
-#modal-stage-btns{display:flex;flex-wrap:wrap;gap:6px}
-.stage-btn{border:1.5px solid #d0d0cc;background:#fff;border-radius:6px;padding:5px 13px;font-size:12px;font-weight:500;cursor:pointer;transition:all .15s;color:#444}
-.stage-btn:hover{border-color:#3d7a52;color:#3d7a52}
-.stage-btn.current{background:#3d7a52;border-color:#3d7a52;color:#fff;font-weight:700}
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0f1117; --surface: #1a1d27; --surface2: #232638; --border: #2d3148;
+    --text: #e2e8f0; --muted: #8892a4; --accent: #3b82f6; --accent-hover: #2563eb;
+    --green: #10b981; --amber: #f59e0b; --cyan: #06b6d4; --purple: #8b5cf6;
+    --emerald: #059669; --pink: #ec4899; --slate: #64748b; --red: #ef4444;
+    --radius: 8px;
+  }
+  body { background:var(--bg); color:var(--text); font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; font-size:14px; min-height:100dvh; display:flex; flex-direction:column; }
+  .topbar { background:var(--surface); border-bottom:1px solid var(--border); padding:12px 20px; display:flex; align-items:center; gap:16px; flex-wrap:wrap; position:sticky; top:0; z-index:100; }
+  .topbar-logo { font-weight:700; font-size:16px; letter-spacing:-0.3px; white-space:nowrap; }
+  .topbar-logo span { color:var(--accent); }
+  .stats-row { display:flex; gap:12px; flex-wrap:wrap; flex:1; }
+  .stat-chip { background:var(--surface2); border:1px solid var(--border); border-radius:20px; padding:4px 12px; font-size:12px; color:var(--muted); white-space:nowrap; }
+  .stat-chip strong { color:var(--text); }
+  .stat-chip.new strong { color:var(--green); }
+  .topbar-actions { display:flex; gap:8px; }
+  .btn { background:var(--accent); color:#fff; border:none; border-radius:var(--radius); padding:7px 14px; font-size:13px; font-weight:500; cursor:pointer; transition:background 0.15s; white-space:nowrap; }
+  .btn:hover { background:var(--accent-hover); }
+  .btn-ghost { background:var(--surface2); color:var(--muted); border:1px solid var(--border); }
+  .btn-ghost:hover { color:var(--text); background:var(--border); }
+  .btn-emerald { background:var(--emerald); }
+  .btn-emerald:hover { background:#047857; }
+  .board-wrapper { flex:1; overflow-x:auto; padding:16px 20px 32px; }
+  .board { display:flex; gap:12px; min-width:max-content; align-items:flex-start; }
+  .column { width:260px; flex-shrink:0; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); display:flex; flex-direction:column; max-height:calc(100dvh - 120px); }
+  .column-header { padding:12px 14px 10px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; background:var(--surface); border-radius:var(--radius) var(--radius) 0 0; z-index:5; }
+  .column-title { font-weight:600; font-size:13px; display:flex; align-items:center; gap:8px; }
+  .col-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+  .count-badge { background:var(--surface2); color:var(--muted); border-radius:10px; padding:1px 7px; font-size:11px; font-weight:600; }
+  .column-cards { padding:8px; overflow-y:auto; flex:1; display:flex; flex-direction:column; gap:8px; min-height:60px; }
+  .column-cards.drag-over { background:rgba(59,130,246,0.07); border-radius:0 0 var(--radius) var(--radius); }
+  .card { background:var(--surface2); border:1px solid var(--border); border-radius:var(--radius); padding:12px; cursor:pointer; transition:border-color 0.15s,transform 0.1s; user-select:none; }
+  .card:hover { border-color:var(--accent); }
+  .card.dragging { opacity:0.4; transform:scale(0.97); }
+  .card-name { font-weight:600; font-size:13px; color:var(--text); margin-bottom:3px; }
+  .card-founder { font-size:12px; color:var(--muted); margin-bottom:7px; }
+  .card-desc { font-size:12px; color:#a0aec0; line-height:1.5; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; margin-bottom:8px; }
+  .card-meta { display:flex; flex-wrap:wrap; gap:5px; align-items:center; }
+  .badge { font-size:10px; font-weight:600; padding:2px 7px; border-radius:10px; color:#fff; text-transform:uppercase; letter-spacing:0.3px; }
+  .badge-PrecisionAg { background:var(--accent); }
+  .badge-BiotechCropScience { background:var(--green); }
+  .badge-ClimateAg { background:var(--amber); color:#1a1d27; }
+  .badge-WaterTech { background:var(--cyan); color:#1a1d27; }
+  .badge-SupplyChain { background:var(--purple); }
+  .badge-RegenerativeAg { background:var(--emerald); }
+  .badge-AnimalHealth { background:var(--pink); }
+  .badge-AgTech { background:var(--slate); }
+  .badge-cohort { background:var(--surface); color:var(--muted); border:1px solid var(--border); font-size:10px; font-weight:500; padding:2px 6px; border-radius:10px; text-transform:none; letter-spacing:0; }
+  .card-date { font-size:11px; color:var(--muted); margin-left:auto; }
+  .deck-icon { font-size:14px; text-decoration:none; opacity:0.7; transition:opacity 0.15s; }
+  .deck-icon:hover { opacity:1; }
+  .overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:200; align-items:flex-start; justify-content:center; padding:40px 16px; overflow-y:auto; }
+  .overlay.active { display:flex; }
+  .modal { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:28px; width:100%; max-width:580px; position:relative; flex-shrink:0; }
+  .modal h2 { font-size:18px; font-weight:700; margin-bottom:4px; }
+  .modal-close { position:absolute; top:16px; right:16px; background:none; border:none; color:var(--muted); font-size:18px; cursor:pointer; line-height:1; padding:4px 6px; border-radius:4px; }
+  .modal-close:hover { color:var(--text); background:var(--surface2); }
+  .modal-subtitle { color:var(--muted); font-size:13px; margin-bottom:20px; }
+  .modal-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:18px; }
+  .modal-label { font-size:11px; text-transform:uppercase; letter-spacing:0.5px; color:var(--muted); font-weight:600; margin-bottom:4px; display:flex; align-items:center; gap:8px; }
+  .modal-value { font-size:13px; color:var(--text); }
+  .modal-value a { color:var(--accent); text-decoration:none; }
+  .modal-value a:hover { text-decoration:underline; }
+  .modal-section { margin-bottom:16px; }
+  .modal-divider { border:none; border-top:1px solid var(--border); margin:18px 0; }
+  .stage-select { background:var(--surface2); color:var(--text); border:1px solid var(--border); border-radius:var(--radius); padding:5px 8px; font-size:13px; width:100%; cursor:pointer; }
+  .notes-area { width:100%; background:var(--surface2); color:var(--text); border:1px solid var(--border); border-radius:var(--radius); padding:8px 10px; font-size:13px; font-family:inherit; resize:vertical; min-height:80px; line-height:1.5; }
+  .notes-area:focus { outline:none; border-color:var(--accent); }
+  .date-input { background:var(--surface2); color:var(--text); border:1px solid var(--border); border-radius:var(--radius); padding:6px 10px; font-size:13px; font-family:inherit; width:100%; }
+  .date-input:focus { outline:none; border-color:var(--accent); }
+  .save-indicator { font-size:10px; color:var(--green); opacity:0; transition:opacity 0.3s; font-weight:500; text-transform:none; letter-spacing:0; }
+  .save-indicator.show { opacity:1; }
+  .contact-log { list-style:none; display:flex; flex-direction:column; gap:4px; }
+  .contact-log li { font-size:12px; color:var(--muted); display:flex; gap:10px; }
+  .log-date { color:var(--accent); white-space:nowrap; flex-shrink:0; }
+  .form-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:12px; }
+  .form-group { display:flex; flex-direction:column; gap:5px; margin-bottom:12px; }
+  .form-label { font-size:11px; text-transform:uppercase; letter-spacing:0.5px; color:var(--muted); font-weight:600; }
+  .form-input { background:var(--surface2); color:var(--text); border:1px solid var(--border); border-radius:var(--radius); padding:7px 10px; font-size:13px; font-family:inherit; width:100%; }
+  .form-input:focus { outline:none; border-color:var(--accent); }
+  .form-actions { display:flex; justify-content:flex-end; gap:8px; margin-top:8px; }
+  .empty-col { text-align:center; padding:24px 12px; color:var(--muted); font-size:12px; }
+  ::-webkit-scrollbar { width:6px; height:6px; }
+  ::-webkit-scrollbar-track { background:var(--surface); }
+  ::-webkit-scrollbar-thumb { background:var(--border); border-radius:3px; }
+  ::-webkit-scrollbar-thumb:hover { background:var(--muted); }
 </style>
 </head>
 <body>
+<div class="topbar">
+  <div class="topbar-logo">ASE <span>Deal Flow</span></div>
+  <div class="stats-row" id="statsRow">
+    <div class="stat-chip"><strong id="statTotal">0</strong> total</div>
+    <div class="stat-chip new"><strong id="statNew">0</strong> this week</div>
+    <div id="stageSummary"></div>
+  </div>
+  <div class="topbar-actions">
+    <button class="btn btn-ghost" onclick="exportPipeline()">&#8595; Export JSON</button>
+    <button class="btn btn-emerald" onclick="openAddModal()">+ Add Deal</button>
+  </div>
+</div>
+<div class="board-wrapper"><div class="board" id="board"></div></div>
 
-<!-- HEADER -->
-<div id="header">
-  <a id="logo" href="#">
-    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect width="32" height="32" rx="7" fill="#3d7a52"/>
-      <path d="M16 6 C16 6 9 12 9 18 C9 22.4 12.1 26 16 26 C19.9 26 23 22.4 23 18 C23 12 16 6 16 6Z" fill="#fff" opacity=".95"/>
-      <path d="M16 10 L16 26" stroke="#3d7a52" stroke-width="1.5" stroke-linecap="round"/>
-      <path d="M16 16 C16 16 12 13 11 10" stroke="#3d7a52" stroke-width="1.2" stroke-linecap="round" opacity=".6"/>
-      <path d="M16 19 C16 19 20 16 21 13" stroke="#3d7a52" stroke-width="1.2" stroke-linecap="round" opacity=".6"/>
-    </svg>
-    <div id="logo-text">Ag Startup Engine<span>Deal Pipeline</span></div>
-  </a>
-  <span id="deal-badge">— deals</span>
-  <div id="header-spacer"></div>
-  <div id="search-wrap">
-    <svg id="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-    <input id="search" type="text" placeholder="Search companies, founders&hellip;" autocomplete="off">
+<!-- DETAIL MODAL -->
+<div class="overlay" id="detailOverlay" onclick="closeDetailIfBg(event)">
+  <div class="modal" id="detailModal">
+    <button class="modal-close" onclick="closeDetail()">&#x2715;</button>
+    <h2 id="dm-name"></h2>
+    <div class="modal-subtitle" id="dm-founder"></div>
+    <div class="modal-grid">
+      <div><div class="modal-label">Stage</div><select class="stage-select" id="dm-stage" onchange="onStageChange()"></select></div>
+      <div><div class="modal-label">Vertical</div><div class="modal-value" id="dm-vertical"></div></div>
+      <div><div class="modal-label">Location</div><div class="modal-value" id="dm-location"></div></div>
+      <div><div class="modal-label">Cohort</div><div class="modal-value" id="dm-cohort"></div></div>
+      <div><div class="modal-label">Date Added</div><div class="modal-value" id="dm-date"></div></div>
+      <div><div class="modal-label">Source</div><div class="modal-value" id="dm-source"></div></div>
+    </div>
+    <div class="modal-section"><div class="modal-label">Description</div><div class="modal-value" id="dm-desc"></div></div>
+    <div class="modal-section" id="dm-raise-row"><div class="modal-label">Raise</div><div class="modal-value" id="dm-raise"></div></div>
+    <div class="modal-section" id="dm-links-row"><div class="modal-label">Links</div><div class="modal-value" id="dm-links"></div></div>
+    <hr class="modal-divider">
+    <div class="modal-section">
+      <div class="modal-label">Last Contact <span class="save-indicator" id="si-contact">Saved</span></div>
+      <input type="date" class="date-input" id="dm-last-contact" onblur="saveLastContact()">
+    </div>
+    <div class="modal-section">
+      <div class="modal-label">Notes <span class="save-indicator" id="si-notes">Saved</span></div>
+      <textarea class="notes-area" id="dm-notes" placeholder="Add notes..." onblur="saveNotes()"></textarea>
+    </div>
+    <div class="modal-section" id="dm-log-section">
+      <div class="modal-label">Contact Log</div>
+      <ul class="contact-log" id="dm-log"></ul>
+    </div>
   </div>
 </div>
 
-<!-- FILTER BAR -->
-<div id="filter-bar">
-  <label>Filter:</label>
-  <button class="filter-btn active" data-filter="All">All</button>
-  <button class="filter-btn" data-filter="AgTech">AgTech</button>
-  <button class="filter-btn" data-filter="PrecisionAg">Precision Ag</button>
-  <button class="filter-btn" data-filter="AnimalHealth">Animal Health</button>
-  <button class="filter-btn" data-filter="RegenerativeAg">Regen Ag</button>
-  <button class="filter-btn" data-filter="LivestockAnimalHealth">Livestock</button>
-  <button class="filter-btn" data-filter="Others">Others</button>
-</div>
-
-<!-- BOARD -->
-<div id="board-wrap"></div>
-
-<!-- MODAL -->
-<div id="modal-overlay">
-  <div id="modal">
-    <div id="modal-header">
-      <div id="modal-title">
-        <div id="modal-company"></div>
-        <div id="modal-founder"></div>
-      </div>
-      <button id="modal-close" title="Close">&times;</button>
+<!-- ADD DEAL MODAL -->
+<div class="overlay" id="addOverlay" onclick="closeAddIfBg(event)">
+  <div class="modal">
+    <button class="modal-close" onclick="closeAdd()">&#x2715;</button>
+    <h2 style="margin-bottom:18px">Add New Deal</h2>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Company Name *</label><input class="form-input" id="f-name" placeholder="Acme AgTech"></div>
+      <div class="form-group"><label class="form-label">Founder Name</label><input class="form-input" id="f-founder" placeholder="Jane Smith"></div>
     </div>
-    <div id="modal-body">
-      <div class="modal-row" id="mrow-vertical">
-        <div class="modal-label">Vertical</div>
-        <div class="modal-value" id="modal-vertical"></div>
-      </div>
-      <div class="modal-row" id="mrow-stage">
-        <div class="modal-label">Current Stage</div>
-        <div class="modal-value" id="modal-stage-cur"></div>
-      </div>
-      <div class="modal-row" id="mrow-cohort">
-        <div class="modal-label">Cohort</div>
-        <div class="modal-value" id="modal-cohort"></div>
-      </div>
-      <div class="modal-row" id="mrow-desc">
-        <div class="modal-label">Description</div>
-        <div class="modal-value" id="modal-desc"></div>
-      </div>
-      <div class="modal-row" id="mrow-docs">
-        <div class="modal-label">Documents</div>
-        <div class="modal-badges" id="modal-docs"></div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Founder Email</label><input class="form-input" id="f-email" type="email" placeholder="jane@acme.com"></div>
+      <div class="form-group"><label class="form-label">Vertical</label>
+        <select class="form-input" id="f-vertical">
+          <option value="">-- select --</option>
+          <option value="PrecisionAg">Precision Ag</option>
+          <option value="BiotechCropScience">Biotech / Crop Science</option>
+          <option value="ClimateAg">Climate Ag &amp; Soil Health</option>
+          <option value="WaterTech">Water Tech &amp; Irrigation</option>
+          <option value="SupplyChain">Supply Chain &amp; Traceability</option>
+          <option value="RegenerativeAg">Regenerative Ag</option>
+          <option value="AnimalHealth">Animal Health</option>
+          <option value="AgTech">AgTech (Other)</option>
+        </select>
       </div>
     </div>
-    <div id="modal-stage-section">
-      <div id="modal-stage-label">Move to Stage</div>
-      <div id="modal-stage-btns"></div>
+    <div class="form-group"><label class="form-label">Description</label><textarea class="form-input notes-area" id="f-desc" rows="2" placeholder="Brief company description..."></textarea></div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Stage</label>
+        <select class="form-input" id="f-stage">
+          <option value="Pipeline">Pipeline</option>
+          <option value="Initial Call">Initial Call</option>
+          <option value="Diligence">Diligence</option>
+          <option value="Later">Later</option>
+          <option value="Portfolio">Portfolio</option>
+          <option value="Passed">Passed</option>
+        </select>
+      </div>
+      <div class="form-group"><label class="form-label">Cohort</label><input class="form-input" id="f-cohort" placeholder="Q2 2026"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Location</label><input class="form-input" id="f-location" placeholder="Austin, TX"></div>
+      <div class="form-group"><label class="form-label">Source</label><input class="form-input" id="f-source" placeholder="Intro, Inbound, etc."></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Deck URL</label><input class="form-input" id="f-deck" type="url" placeholder="https://..."></div>
+      <div class="form-group"><label class="form-label">LinkedIn</label><input class="form-input" id="f-linkedin" type="url" placeholder="https://linkedin.com/..."></div>
+    </div>
+    <div class="form-group"><label class="form-label">Raise Details</label><input class="form-input" id="f-raise" placeholder="$2M seed, 60% committed"></div>
+    <div class="form-actions">
+      <button class="btn btn-ghost" onclick="closeAdd()">Cancel</button>
+      <button class="btn" onclick="submitAddDeal()">Add Deal</button>
     </div>
   </div>
 </div>
 
 <script>
-const STAGES = ["Pipeline","Initial Call","Diligence","Later","Portfolio","Passed"];
-const FILTERS = {
-  "All": null,
-  "AgTech": ["Agtech","AgTech"],
-  "PrecisionAg": ["PrecisionAg"],
-  "AnimalHealth": ["AnimalHealth"],
-  "RegenerativeAg": ["RegenerativeAg"],
-  "LivestockAnimalHealth": ["LivestockAnimalHealth"],
-  "Others": ["Others"]
-};
-const LS_KEY = "ase_pipeline_stages_v1";
+const SEED_DEALS = [
+  {"company_name":"Regenerative Growth Technologies","founder_name":"Idris Panchard","founder_email":"idris@rgtech.solutions","description":"Develops autonomous on-farm systems that convert organic farm waste into high-performance biofertilizer, reducing input costs and improving soil health.","deck_url":null,"vertical":"RegenerativeAg","cohort":"Q1 2026","stage":"Pipeline","location":"Atlanta, Georgia, USA","date_added":"2026-03-16"},
+  {"company_name":"Meatly","founder_name":"Owen Ensor","founder_email":"boardy@boardy.ai","description":"First company in Europe to commercially sell cultivated meat, focused on the pet food market, with production costs driven down ~100x.","deck_url":null,"vertical":"AgTech","cohort":"Q1 2026","stage":"Pipeline","source":"Boardy intro","linkedin":"https://www.linkedin.com/in/owen-ensor-3496853a","raise":"Closing final \u00a33M of \u00a310M round (\u00a37M committed)","date_added":"2026-03-16"},
+  {"company_name":"Verdethos","founder_name":"Aidan Dowdle","founder_email":"boardy@boardy.ai","description":"Vertical SaaS platform for agricultural commodity trade execution and ESG compliance, with $600K ARR and 10 signed enterprise contracts.","deck_url":null,"vertical":"AgTech","cohort":"Q1 2026","stage":"Pipeline","source":"Boardy intro","linkedin":"https://www.linkedin.com/in/dowdlea","raise":"Opening $2M priced seed round (targeting late March close); $1.75M already raised","date_added":"2026-03-16"},
+  {"company_name":"Sarama","founder_name":"Praful Mathur","founder_email":"boardy@boardy.ai","description":"Device and app that translates dog vocalizations and body language into real-time health and behavior insights using hardware and ML.","deck_url":null,"vertical":"AnimalHealth","cohort":"Q1 2026","stage":"Pipeline","source":"Boardy intro","linkedin":"https://www.linkedin.com/in/prafulmathur","raise":"$3M seed in progress ($500K committed); ~$15K/week preorder revenue","date_added":"2026-03-16"},
+  {"company_name":"T3RRA","founder_name":"Charles Reynolds","founder_email":"boardy@boardy.ai","description":"Precision terrain optimization software doing $4.5M-$5M in profitable annual revenue, running through 1,600 dealer locations across 30 countries.","deck_url":null,"vertical":"PrecisionAg","cohort":"Q1 2026","stage":"Pipeline","source":"Boardy intro","linkedin":"https://www.linkedin.com/in/charles-reynolds-50605535","raise":"First formal capital raise; discovery stage; self-funded to date","date_added":"2026-03-16"}
+];
 
-// DEALS is populated at runtime via fetch('./data/pipeline.json')
-let DEALS = [];
+const LS_KEY = 'ase_pipeline_v1';
+const STAGES = ['Pipeline','Initial Call','Diligence','Later','Portfolio','Passed'];
+const STAGE_COLORS = {'Pipeline':'#3b82f6','Initial Call':'#10b981','Diligence':'#f59e0b','Later':'#06b6d4','Portfolio':'#059669','Passed':'#ef4444'};
 
-// ── State ──
-let stageOverrides = {};
-try { stageOverrides = JSON.parse(localStorage.getItem(LS_KEY) || "{}"); } catch(e){}
-let activeFilter = "All";
-let searchQuery = "";
-let openDealId = null;
+let deals = [];
+let currentId = null;
+let dragSrcId = null;
+let dragSrcStage = null;
 
-function getStage(deal) {
-  return stageOverrides[deal.id] || deal.stage;
+function loadDeals() {
+  try {
+    const raw = localStorage.getItem(LS_KEY);
+    if (raw) { const p = JSON.parse(raw); if (Array.isArray(p) && p.length > 0) { deals = p; return; } }
+  } catch(e) {}
+  deals = SEED_DEALS.map((d,i) => ({...d, _id:'seed_'+i, notes:'', last_contact:'', contact_log:[]}));
+  saveDeals();
 }
 
-function setStage(dealId, stage) {
-  stageOverrides[dealId] = stage;
-  localStorage.setItem(LS_KEY, JSON.stringify(stageOverrides));
+function saveDeals() {
+  try { localStorage.setItem(LS_KEY, JSON.stringify(deals)); } catch(e) {}
 }
 
-function matchesFilter(deal) {
-  if (activeFilter === "All") return true;
-  const allowed = FILTERS[activeFilter];
-  if (!allowed) return true;
-  return allowed.includes(deal.vertical);
+function exportPipeline() {
+  const data = deals.map(({_id,...rest}) => rest);
+  const blob = new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href=url; a.download='pipeline.json'; a.click();
+  URL.revokeObjectURL(url);
 }
 
-function matchesSearch(deal) {
-  if (!searchQuery) return true;
-  const q = searchQuery.toLowerCase();
-  return (deal.company||"").toLowerCase().includes(q)
-      || (deal.founder||"").toLowerCase().includes(q)
-      || (deal.description||"").toLowerCase().includes(q)
-      || (deal.vertical||"").toLowerCase().includes(q);
+function computeStats() {
+  const total = deals.length;
+  const cutoff = new Date(); cutoff.setDate(cutoff.getDate()-7);
+  const newThisWeek = deals.filter(d => { try { return d.date_added && new Date(d.date_added+'T00:00:00')>=cutoff; } catch{return false;} }).length;
+  const byStage = {}; STAGES.forEach(s => { byStage[s] = deals.filter(d=>d.stage===s).length; });
+  return {total, newThisWeek, byStage};
 }
 
-function visibleDeals() {
-  return DEALS.filter(d => matchesFilter(d) && matchesSearch(d));
+function renderStats() {
+  const s = computeStats();
+  document.getElementById('statTotal').textContent = s.total;
+  document.getElementById('statNew').textContent = s.newThisWeek;
+  document.getElementById('stageSummary').innerHTML = STAGES.map(st => {
+    const c = s.byStage[st]||0; if(!c) return '';
+    return `<div class="stat-chip"><strong style="color:${STAGE_COLORS[st]}">${c}</strong> ${st}</div>`;
+  }).join('');
 }
 
-function vtag(vertical) {
-  const v = vertical || "null";
-  const label = v === "null" ? "—" : v.replace(/([A-Z])/g,' $1').trim();
-  return `<span class="vtag vtag-${v}">${label}</span>`;
-}
-
-function escHtml(s) {
-  if (!s) return "";
-  return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
-}
-
-// ── Render board ──
 function renderBoard() {
-  const board = document.getElementById("board-wrap");
-  const visible = visibleDeals();
-
-  board.innerHTML = "";
+  renderStats();
+  const board = document.getElementById('board'); board.innerHTML='';
   STAGES.forEach(stage => {
-    const stageDeals = visible.filter(d => getStage(d) === stage);
-    const col = document.createElement("div");
-    col.className = "column";
-    col.innerHTML = `
-      <div class="col-header">
-        <span class="col-title">${escHtml(stage)}</span>
-        <span class="col-count" id="cnt-${stage.replace(/\s/g,'_')}">${stageDeals.length}</span>
-      </div>
-      <div class="col-cards" id="col-${stage.replace(/\s/g,'_')}"></div>
-    `;
+    const sd = deals.filter(d=>d.stage===stage);
+    const col = document.createElement('div'); col.className='column'; col.dataset.stage=stage;
+    const color = STAGE_COLORS[stage]||'#3b82f6';
+    col.innerHTML = `<div class="column-header"><div class="column-title"><span class="col-dot" style="background:${color}"></span>${stage}</div><span class="count-badge">${sd.length}</span></div><div class="column-cards" id="col-${slugify(stage)}" ondragover="onDragOver(event)" ondragleave="onDragLeave(event)" ondrop="onDrop(event,'${stage}')">${sd.length===0?'<div class="empty-col">No deals</div>':sd.map(d=>cardHTML(d)).join('')}</div>`;
     board.appendChild(col);
-
-    const cardContainer = col.querySelector(".col-cards");
-    if (stageDeals.length === 0) {
-      cardContainer.innerHTML = `<div class="no-results">No deals</div>`;
-    } else {
-      stageDeals.forEach(deal => {
-        cardContainer.appendChild(buildCard(deal));
-      });
-    }
   });
-
-  // Update total badge
-  document.getElementById("deal-badge").textContent = `${visible.length} deal${visible.length!==1?'s':''}`;
+  document.querySelectorAll('.card').forEach(c => { c.addEventListener('dragstart',onDragStart); c.addEventListener('dragend',onDragEnd); });
 }
 
-function buildCard(deal) {
-  const div = document.createElement("div");
-  div.className = "card";
-  div.dataset.id = deal.id;
+function slugify(s) { return s.toLowerCase().replace(/\s+/g,'_'); }
 
-  let footer = "";
-  if (deal.vertical) footer += vtag(deal.vertical);
-  if (deal.cohort) footer += `<span class="cohort-tag">${escHtml(deal.cohort)}</span>`;
-  if (deal.deck_url) footer += `<a class="badge badge-deck" href="${escHtml(deal.deck_url)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">Deck</a>`;
-  if (deal.brief_url) footer += `<a class="badge badge-brief" href="${escHtml(deal.brief_url)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">Brief</a>`;
-  if (deal.notes_url) footer += `<a class="badge badge-notes" href="${escHtml(deal.notes_url)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">Notes</a>`;
-
-  div.innerHTML = `
-    <div class="card-company">${escHtml(deal.company)}</div>
-    ${deal.founder ? `<div class="card-founder">${escHtml(deal.founder)}</div>` : ""}
-    ${deal.description ? `<div class="card-desc">${escHtml(deal.description)}</div>` : ""}
-    <div class="card-footer">${footer}</div>
-  `;
-
-  div.addEventListener("click", () => openModal(deal.id));
-  return div;
+function vClass(v) {
+  return {'PrecisionAg':'badge-PrecisionAg','Biotech/CropScience':'badge-BiotechCropScience','BiotechCropScience':'badge-BiotechCropScience','ClimateAg':'badge-ClimateAg','WaterTech':'badge-WaterTech','SupplyChain':'badge-SupplyChain','RegenerativeAg':'badge-RegenerativeAg','AnimalHealth':'badge-AnimalHealth','AgTech':'badge-AgTech'}[v]||'badge-AgTech';
 }
 
-// ── Modal ──
-function openModal(dealId) {
-  const deal = DEALS.find(d => d.id === dealId);
-  if (!deal) return;
-  openDealId = dealId;
-  const currentStage = getStage(deal);
-
-  document.getElementById("modal-company").textContent = deal.company || "";
-  document.getElementById("modal-founder").textContent = deal.founder ? `Founded by ${deal.founder}` : "";
-  document.getElementById("modal-vertical").innerHTML = deal.vertical ? vtag(deal.vertical) : "—";
-  document.getElementById("modal-stage-cur").textContent = currentStage;
-  document.getElementById("modal-cohort").textContent = deal.cohort || "—";
-  document.getElementById("modal-desc").textContent = deal.description || "—";
-
-  // docs
-  const docsEl = document.getElementById("modal-docs");
-  docsEl.innerHTML = "";
-  if (deal.deck_url) {
-    const a = document.createElement("a");
-    a.className = "modal-badge badge-deck";
-    a.href = deal.deck_url; a.target = "_blank"; a.rel = "noopener";
-    a.textContent = "Deck"; docsEl.appendChild(a);
-  }
-  if (deal.brief_url) {
-    const a = document.createElement("a");
-    a.className = "modal-badge badge-brief";
-    a.href = deal.brief_url; a.target = "_blank"; a.rel = "noopener";
-    a.textContent = "Brief"; docsEl.appendChild(a);
-  }
-  if (deal.notes_url) {
-    const a = document.createElement("a");
-    a.className = "modal-badge badge-notes";
-    a.href = deal.notes_url; a.target = "_blank"; a.rel = "noopener";
-    a.textContent = "Notes"; docsEl.appendChild(a);
-  }
-  document.getElementById("mrow-docs").style.display = (deal.deck_url||deal.brief_url||deal.notes_url) ? "" : "none";
-
-  // stage buttons
-  const stagebtns = document.getElementById("modal-stage-btns");
-  stagebtns.innerHTML = "";
-  STAGES.forEach(s => {
-    const btn = document.createElement("button");
-    btn.className = "stage-btn" + (s === currentStage ? " current" : "");
-    btn.textContent = s;
-    btn.addEventListener("click", () => {
-      setStage(dealId, s);
-      renderBoard();
-      // update modal to reflect new stage
-      document.getElementById("modal-stage-cur").textContent = s;
-      stagebtns.querySelectorAll(".stage-btn").forEach(b => b.classList.toggle("current", b.textContent === s));
-    });
-    stagebtns.appendChild(btn);
-  });
-
-  document.getElementById("modal-overlay").classList.add("open");
+function vLabel(v) {
+  return {'PrecisionAg':'Precision Ag','Biotech/CropScience':'Biotech','BiotechCropScience':'Biotech','ClimateAg':'Climate Ag','WaterTech':'Water Tech','SupplyChain':'Supply Chain','RegenerativeAg':'Regen Ag','AnimalHealth':'Animal Health','AgTech':'AgTech'}[v]||(v||'AgTech');
 }
 
-function closeModal() {
-  document.getElementById("modal-overlay").classList.remove("open");
-  openDealId = null;
+function cardHTML(deal) {
+  const id = deal._id;
+  const deckIcon = deal.deck_url ? `<a class="deck-icon" href="${esc(deal.deck_url)}" target="_blank" title="View Deck" onclick="event.stopPropagation()">&#128196;</a>` : '';
+  const v = deal.vertical||'';
+  return `<div class="card" draggable="true" data-id="${esc(id)}" data-stage="${esc(deal.stage)}" onclick="openDetail('${esc(id)}')">${'<div class="card-name">'+esc(deal.company_name||'')+'</div>'}${deal.founder_name?'<div class="card-founder">'+esc(deal.founder_name)+'</div>':''}${deal.description?'<div class="card-desc">'+esc(deal.description)+'</div>':''}<div class="card-meta">${v?'<span class="badge '+vClass(v)+'">'+vLabel(v)+'</span>':''}${deal.cohort?'<span class="badge badge-cohort">'+esc(deal.cohort)+'</span>':''}<span class="card-date">${deal.date_added?fmtDate(deal.date_added):''}</span>${deckIcon}</div></div>`;
 }
 
-document.getElementById("modal-close").addEventListener("click", closeModal);
-document.getElementById("modal-overlay").addEventListener("click", e => {
-  if (e.target === document.getElementById("modal-overlay")) closeModal();
-});
-document.addEventListener("keydown", e => { if (e.key === "Escape") closeModal(); });
+function fmtDate(s) { try { return new Date(s+'T00:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'2-digit'}); } catch{return s;} }
+function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
 
-// ── Filter buttons ──
-document.querySelectorAll(".filter-btn").forEach(btn => {
-  btn.addEventListener("click", () => {
-    document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
-    btn.classList.add("active");
-    activeFilter = btn.dataset.filter;
-    renderBoard();
-  });
-});
-
-// ── Search ──
-document.getElementById("search").addEventListener("input", e => {
-  searchQuery = e.target.value.trim();
-  renderBoard();
-});
-
-// ── Init: load deals from data/pipeline.json, then render ──
-function init() {
-  renderBoard();
+function onDragStart(e) { const c=e.currentTarget; dragSrcId=c.dataset.id; dragSrcStage=c.dataset.stage; c.classList.add('dragging'); e.dataTransfer.effectAllowed='move'; e.dataTransfer.setData('text/plain',dragSrcId); }
+function onDragEnd(e) { e.currentTarget.classList.remove('dragging'); }
+function onDragOver(e) { e.preventDefault(); e.dataTransfer.dropEffect='move'; e.currentTarget.classList.add('drag-over'); }
+function onDragLeave(e) { e.currentTarget.classList.remove('drag-over'); }
+function onDrop(e,targetStage) {
+  e.preventDefault(); e.currentTarget.classList.remove('drag-over');
+  if(!dragSrcId||dragSrcStage===targetStage) return;
+  const d=deals.find(x=>x._id===dragSrcId); if(d){d.stage=targetStage;saveDeals();renderBoard();}
+  dragSrcId=null; dragSrcStage=null;
 }
 
-// Show loading state while fetching
-document.getElementById("board-wrap").innerHTML =
-  '<div style="padding:40px;text-align:center;color:#888;font-size:14px;width:100%;">Loading deals&hellip;</div>';
+function findDeal(id) { return deals.find(d=>d._id===id)||null; }
 
-fetch('./data/pipeline.json')
-  .then(function(res) {
-    if (!res.ok) throw new Error('Failed to load pipeline.json (HTTP ' + res.status + ')');
-    return res.json();
-  })
-  .then(function(data) {
-    DEALS = data.deals || [];
-    init();
-  })
-  .catch(function(err) {
-    document.getElementById("board-wrap").innerHTML =
-      '<div style="padding:40px;text-align:center;color:#c00;font-size:14px;width:100%;">Error loading deals: ' + err.message + '</div>';
-    console.error(err);
-  });
+function openDetail(id) {
+  const deal=findDeal(id); if(!deal) return; currentId=id;
+  document.getElementById('dm-name').textContent=deal.company_name||'';
+  document.getElementById('dm-founder').textContent=[deal.founder_name,deal.founder_email].filter(Boolean).join(' · ');
+  document.getElementById('dm-stage').innerHTML=STAGES.map(s=>`<option value="${s}"${s===deal.stage?' selected':''}>${s}</option>`).join('');
+  document.getElementById('dm-vertical').textContent=vLabel(deal.vertical||'');
+  document.getElementById('dm-location').textContent=deal.location||'—';
+  document.getElementById('dm-cohort').textContent=deal.cohort||'—';
+  document.getElementById('dm-date').textContent=deal.date_added?fmtDate(deal.date_added):'—';
+  document.getElementById('dm-source').textContent=deal.source||'—';
+  document.getElementById('dm-desc').textContent=deal.description||'—';
+  const rr=document.getElementById('dm-raise-row'); if(deal.raise){document.getElementById('dm-raise').textContent=deal.raise;rr.style.display='';}else{rr.style.display='none';}
+  const lr=document.getElementById('dm-links-row'),le=document.getElementById('dm-links');
+  const lks=[]; if(deal.deck_url)lks.push(`<a href="${esc(deal.deck_url)}" target="_blank">&#128196; View Deck</a>`); if(deal.linkedin)lks.push(`<a href="${esc(deal.linkedin)}" target="_blank">&#128101; LinkedIn</a>`);
+  if(lks.length){le.innerHTML=lks.join(' &nbsp;&#183;&nbsp; ');lr.style.display='';}else{lr.style.display='none';}
+  document.getElementById('dm-notes').value=deal.notes||'';
+  document.getElementById('dm-last-contact').value=deal.last_contact||'';
+  const log=deal.contact_log||[],logEl=document.getElementById('dm-log'),logSec=document.getElementById('dm-log-section');
+  if(log.length){logEl.innerHTML=log.map(e=>`<li><span class="log-date">${esc(e.date||'')}</span><span>${esc(e.note||'')}</span></li>`).join('');logSec.style.display='';}else{logSec.style.display='none';}
+  document.getElementById('detailOverlay').classList.add('active');
+}
+
+function closeDetail() { document.getElementById('detailOverlay').classList.remove('active'); currentId=null; }
+function closeDetailIfBg(e) { if(e.target===document.getElementById('detailOverlay'))closeDetail(); }
+
+function onStageChange() {
+  if(!currentId) return;
+  const ns=document.getElementById('dm-stage').value, d=findDeal(currentId);
+  if(d){d.stage=ns;saveDeals();renderBoard();}
+}
+
+function saveNotes() {
+  if(!currentId) return; const d=findDeal(currentId);
+  if(d){d.notes=document.getElementById('dm-notes').value;saveDeals();flashSaved('si-notes');}
+}
+
+function saveLastContact() {
+  if(!currentId) return; const lc=document.getElementById('dm-last-contact').value, d=findDeal(currentId);
+  if(d){d.last_contact=lc;if(lc){if(!d.contact_log)d.contact_log=[];d.contact_log.push({date:lc,note:'Contact recorded'});const logEl=document.getElementById('dm-log'),logSec=document.getElementById('dm-log-section');logEl.innerHTML=d.contact_log.map(e=>`<li><span class="log-date">${esc(e.date||'')}</span><span>${esc(e.note||'')}</span></li>`).join('');logSec.style.display='';}saveDeals();flashSaved('si-contact');renderBoard();}
+}
+
+function flashSaved(id) { const el=document.getElementById(id); el.classList.add('show'); setTimeout(()=>el.classList.remove('show'),2000); }
+
+function openAddModal() {
+  ['f-name','f-founder','f-email','f-desc','f-cohort','f-location','f-source','f-deck','f-linkedin','f-raise'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('f-stage').value='Pipeline'; document.getElementById('f-vertical').value='';
+  document.getElementById('addOverlay').classList.add('active');
+}
+function closeAdd() { document.getElementById('addOverlay').classList.remove('active'); }
+function closeAddIfBg(e) { if(e.target===document.getElementById('addOverlay'))closeAdd(); }
+
+function submitAddDeal() {
+  const name=document.getElementById('f-name').value.trim(); if(!name){alert('Company name is required.');return;}
+  const uid='deal_'+Date.now()+'_'+Math.random().toString(36).slice(2,7);
+  deals.push({_id:uid,company_name:name,founder_name:document.getElementById('f-founder').value.trim()||null,founder_email:document.getElementById('f-email').value.trim()||null,description:document.getElementById('f-desc').value.trim()||null,vertical:document.getElementById('f-vertical').value||null,stage:document.getElementById('f-stage').value,cohort:document.getElementById('f-cohort').value.trim()||null,location:document.getElementById('f-location').value.trim()||null,source:document.getElementById('f-source').value.trim()||null,deck_url:document.getElementById('f-deck').value.trim()||null,linkedin:document.getElementById('f-linkedin').value.trim()||null,raise:document.getElementById('f-raise').value.trim()||null,date_added:new Date().toISOString().slice(0,10),notes:'',last_contact:'',contact_log:[]});
+  saveDeals(); closeAdd(); renderBoard();
+}
+
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeDetail();closeAdd();}});
+loadDeals(); renderBoard();
 </script>
 </body>
 </html>
