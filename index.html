@@ -4,3 +4,86 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ASE Deal Flow</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2d3148;--text:#e2e8f0;--muted:#8892a4;--accent:#3b82f6;--green:#10b981;--amber:#f59e0b;--radius:8px}
+body{background:var(--bg);color:var(--text);font-family:system-ui,sans-serif;font-size:14px;min-height:100vh}
+.topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:12px 20px;display:flex;align-items:center;gap:16px;position:sticky;top:0;z-index:10}
+.topbar-logo{font-weight:700;font-size:16px;color:var(--accent)}
+.stat{background:var(--border);border-radius:4px;padding:3px 10px;font-size:12px}
+.stat strong{color:var(--text)}
+.board{display:flex;gap:12px;padding:16px;overflow-x:auto;min-height:calc(100vh - 53px)}
+.col{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);min-width:260px;max-width:280px;display:flex;flex-direction:column}
+.col-header{padding:10px 12px;border-bottom:1px solid var(--border);font-weight:600;font-size:13px;display:flex;justify-content:space-between}
+.col-count{background:var(--border);border-radius:10px;padding:1px 8px;font-size:11px;color:var(--muted)}
+.col-body{padding:8px;flex:1;overflow-y:auto;max-height:calc(100vh - 130px)}
+.card{background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:10px;margin-bottom:8px;cursor:pointer;transition:border-color .15s}
+.card:hover{border-color:var(--accent)}
+.card-company{font-weight:600;font-size:13px;margin-bottom:2px}
+.card-founder{color:var(--muted);font-size:11px;margin-bottom:4px}
+.card-desc{color:var(--muted);font-size:11px;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.card-tags{display:flex;gap:4px;margin-top:6px;flex-wrap:wrap}
+.tag{font-size:10px;padding:1px 6px;border-radius:10px;background:var(--border);color:var(--muted)}
+.loading{display:flex;align-items:center;justify-content:center;height:200px;color:var(--muted);font-size:13px}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="topbar-logo">ASE Deal Flow</div>
+  <div class="stat"><strong id="statTotal">...</strong> total deals</div>
+  <div class="stat"><strong id="statPipeline">...</strong> pipeline</div>
+  <div class="stat"><strong id="statPortfolio">...</strong> portfolio</div>
+</div>
+<div id="board" class="board"><div class="loading">Loading 339 deals...</div></div>
+<script>
+const STAGES=['Pipeline','Initial Call','Diligence','Later','Portfolio','Passed'];
+const COLORS={Pipeline:'#3b82f6','Initial Call':'#f59e0b',Diligence:'#8b5cf6',Later:'#06b6d4',Portfolio:'#10b981',Passed:'#64748b'};
+const URL='https://raw.githubusercontent.com/mooney16/pipeline/main/docs/data/pipeline.json';
+
+function remap(d,i){return{_id:d.id||'deal_'+i,company_name:d.company||'',founder_name:d.founder||'',description:d.description||'',vertical:d.vertical||'',cohort:d.cohort||'',stage:d.stage||'Pipeline',deck_url:d.deck_url||null,date_added:d.created_at||''};}
+
+async function init(){
+  try{
+    const r=await fetch(URL);
+    const data=await r.json();
+    const deals=(data.deals||[]).map(remap);
+    renderBoard(deals);
+  }catch(e){
+    document.getElementById('board').innerHTML='<div class="loading">Error loading deals. Check console.</div>';
+    console.error(e);
+  }
+}
+
+function renderBoard(deals){
+  const byStage={};
+  STAGES.forEach(s=>{byStage[s]=[];});
+  deals.forEach(d=>{const s=d.stage||'Pipeline';if(byStage[s])byStage[s].push(d);else byStage['Pipeline'].push(d);});
+  document.getElementById('statTotal').textContent=deals.length;
+  document.getElementById('statPipeline').textContent=(byStage['Pipeline']||[]).length;
+  document.getElementById('statPortfolio').textContent=(byStage['Portfolio']||[]).length;
+  const board=document.getElementById('board');
+  board.innerHTML=STAGES.map(s=>`
+    <div class="col">
+      <div class="col-header" style="border-top:3px solid ${COLORS[s]||'#3b82f6'}">
+        ${s}<span class="col-count">${byStage[s].length}</span>
+      </div>
+      <div class="col-body">
+        ${byStage[s].map(d=>`
+          <div class="card">
+            <div class="card-company">${d.company_name||'Unnamed'}</div>
+            <div class="card-founder">${d.founder_name||''}</div>
+            <div class="card-desc">${d.description||''}</div>
+            <div class="card-tags">
+              ${d.vertical?`<span class="tag">${d.vertical}</span>`:''}
+              ${d.cohort?`<span class="tag">${d.cohort}</span>`:''}
+              ${d.date_added?`<span class="tag">${d.date_added.slice(0,7)}</span>`:''}
+            </div>
+          </div>`).join('')}
+      </div>
+    </div>`).join('');
+}
+
+init();
+</script>
+</body>
+</html>
